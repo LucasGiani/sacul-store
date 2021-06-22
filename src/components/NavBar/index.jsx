@@ -4,9 +4,16 @@ import NavbarToggle from 'react-bootstrap/esm/NavbarToggle';
 import { capitalizeFirstLetter } from '../../utils/capitalize-first-letter';
 import { CardWidget } from '../CartWidget';
 
-export const NavBar = () => {
+export const NavBar = ({cart}) => {
 
     const categories = ['calzado', 'indumentaria','accesorios'];
+
+    const getCantProductos = () => {
+        let cantidad = 0;
+        cart.map(producto => cantidad += producto.cantidadComprada );
+
+        return cantidad;
+    }
 
     const DropDown = ({title, categories}) => {
 
@@ -16,13 +23,13 @@ export const NavBar = () => {
                     <NavDropdown.Item key={category} href={`${title}/${category}`}>{capitalizeFirstLetter(category)}</NavDropdown.Item>
                 ))}
                 <NavDropdown.Divider/>
-                <NavDropdown.Item href={`#${title}/ofertas`}>Ofertas</NavDropdown.Item>
+                <NavDropdown.Item href={`${title}/ofertas`}>Ofertas</NavDropdown.Item>
             </NavDropdown>
         );
     }
 
     return (
-        <Navbar bg="light" expand="lg">
+        <Navbar bg="light" expand="md">
             <NavbarBrand key={1} href="home">
                 <CardWidget title={'E-COMMERCE'}/>
             </NavbarBrand>
@@ -31,6 +38,7 @@ export const NavBar = () => {
                 <Nav className="mr-auto">
                     {DropDown({title:'hombre', categories})}
                     {DropDown({title:'mujer', categories})}
+                    <span style={{ padding: '.5rem' }}>Cantidad de productos en el carrito: {getCantProductos()}</span>
                 </Nav>
                 <Form inline>
                     <FormControl type="text" placeholder="Búsqueda" className="mr-sm-2" />

@@ -5,7 +5,7 @@ export const CardWidget = ({title}) =>{
     
     return (
         <>
-            <FontAwesomeIcon style={{ color: 'grey'}} icon={faShoppingCart} title={title}/>
+            <FontAwesomeIcon style={{ marginLeft: '.5rem', color: 'grey'}} icon={faShoppingCart} title={title}/>
         </>
     )
 }
