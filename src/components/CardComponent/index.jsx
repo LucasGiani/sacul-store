@@ -1,6 +1,8 @@
 import { useState } from "react";
-import { Card, CardImg } from "react-bootstrap"
+import { Card } from "react-bootstrap"
 import { ItemCount } from "../ItemCount";
+import { Link } from "react-router-dom";
+import './styles.css'
 
 export const CardComponent = ({product, onAdd}) => {
 
@@ -15,12 +17,19 @@ export const CardComponent = ({product, onAdd}) => {
     return(
         <>
             {!!producto &&
-                <Card style={{ textAlign: 'center', width: '18rem', padding: '2rem', marginLeft: '1rem', marginBottom: '1rem', backgroundColor: "#E2E2E2" }}>
-                    <CardImg variant="top" src={producto.img} />
+                <Card className='product-card'>
+                    <Link to={`/item/${producto.id}`}>
+                        <img className='card-image' src={producto.img} />
+                    </Link>
                     <Card.Body>
-                        <Card.Title>{producto.title}</Card.Title>
+                        <Card.Title>
+                            <Link className='product-title' to={`/item/${producto.id}`}>{producto.title}</Link>
+                        </Card.Title>
                         <Card.Text><strong>{`$${producto.price}`}</strong></Card.Text>
                         <Card.Text>Cantidad disponible: {producto.stock}</Card.Text>
+                        <Card.Text>
+                            <Link to={`/item/${producto.id}`}>Ver detalle</Link>    
+                        </Card.Text>
                         <ItemCount stock={producto.stock} initial={1} onAdd={comprar}/>
                     </Card.Body>
                 </Card>

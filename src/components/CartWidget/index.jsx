@@ -1,11 +1,18 @@
-import { faShoppingCart } from "@fortawesome/free-solid-svg-icons"
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faShoppingCart } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Badge } from "react-bootstrap";
+import "./styles.css";
 
-export const CardWidget = ({title}) =>{
+export const CardWidget = ({count}) =>{
     
     return (
         <>
-            <FontAwesomeIcon style={{ marginLeft: '.5rem', color: 'grey'}} icon={faShoppingCart} title={title}/>
+            <FontAwesomeIcon className='cart'
+                icon={faShoppingCart} 
+                size='2x'/>
+            <Badge className='cart-count' pill variant="primary">
+                {count}
+            </Badge>
         </>
     )
 }

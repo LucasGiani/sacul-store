@@ -1,10 +1,11 @@
 import { Row } from "react-bootstrap";
 import { CardComponent } from "../../components/CardComponent";
+import './styles.css'
 
 export const ItemList = ({items, onAdd}) => {
 
     return(
-        <Row style={{ display: 'flex', justifyContent: 'center', width: '100%', padding: '1rem' }}> 
+        <Row className='products-row'> 
             {items.filter(item => item.stock !== 0).map((item) => 
                 <CardComponent key={item.id} onAdd={onAdd} product={item} />
             )}

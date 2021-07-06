@@ -1,35 +1,55 @@
-import { useEffect } from "react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Row } from "react-bootstrap";
+import { useParams } from "react-router-dom";
 import { ItemList } from "../../components/ItemList";
-import { getData } from "../../utils/get-data";
+import { Loader } from "../../components/Loader";
+import { SUBCATEGORY } from "../../utils/const";
+import { getDataByText } from "../../utils/get-data";
 
-export const ItemListContainer = ({onAdd, greeting}) => {
+export const ItemListContainer = ({onAdd, greeting, products, setProducts}) => {
 
-    const [products, setProducts] = useState([]);
+    const [header, setHeader] = useState(greeting);
+    const [productosDeCategoria, setProductosDeCategoria] = useState([]);
+    const [isLoading, setLoading] = useState(false);
+    const { id } = useParams();
 
-    useEffect(() =>{
+    useEffect(() => {
+        const isCategoriaExistente = !!SUBCATEGORY[parseInt(id || "1")]?.title;
+        if(!isCategoriaExistente) return window.alert('La categoría no existe');
 
+        setHeader(id ? `Listado de ${SUBCATEGORY[parseInt(id)].title}` : greeting);
         const waitForData = async () => {
-            let data = await getData('zapatillas');
+            let data = await getDataByText(SUBCATEGORY[parseInt(id || "1")]?.title);
             let productos = data.map(element => {
                 return {
                     id: element.id,
                     title: element.title,
-                    img: element.thumbnail,
+                    img: element.thumbnail.replace('I.jpg', 'O.jpg'),
                     price: element.price,
                     stock: element.available_quantity,
-                    cantidadComprada: 0
+                    cantidadComprada: 0,
+                    subcategory: parseInt(id || "1")
                 }
             });
-            setProducts(productos);
+            setProductosDeCategoria(productos);
+            setLoading(false);
+            setProducts(products.concat(productos));
         }
 
-        setTimeout(() => {waitForData()}, 2000);
-    }, [])
+        if(!productosDeCategoria.length || (!!productosDeCategoria.length && productosDeCategoria[0].subcategory !== parseInt(id || "1"))){
+            let productosDeLaCategoria = products.filter(producto => producto.subcategory === parseInt(id || "1"));
+
+            if(!productosDeLaCategoria.length){
+                setProductosDeCategoria([]);
+                setLoading(true);
+                setTimeout(() => {waitForData()}, 2000);
+            }
+            else
+                setProductosDeCategoria(productosDeLaCategoria);
+        }
+    }, [id, products])
 
     const changeProduct = (product, count) => {
-
         const productosModificados = products.map(producto => {
             if(producto.id === product.id){
                 return product;
@@ -45,10 +65,13 @@ export const ItemListContainer = ({onAdd, greeting}) => {
 
     return(
         <>
-            <Row style={{ marginLeft: '1rem' }}>
-                <h2>{greeting}</h2>
+            <Row style={{ marginLeft: '2rem' }}>
+                <h2>{header}</h2>
             </Row>
-            <ItemList onAdd={changeProduct} items={products}/>
+
+            <Loader isShown={isLoading}>Cargando listado de productos...</Loader>
+            
+            {!!productosDeCategoria.length && <ItemList onAdd={changeProduct} items={productosDeCategoria}/>}
         </>
     )
 }

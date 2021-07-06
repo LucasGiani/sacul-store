@@ -1,0 +1,13 @@
+.cart {
+    color: 'dark';
+}
+
+.cart-count {
+    vertical-align: top;
+    margin-left: -4;
+    font-size: 65%;
+    opacity: 85%;
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+    padding-top: 0.2em;
+}

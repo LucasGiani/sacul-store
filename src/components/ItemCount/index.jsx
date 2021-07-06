@@ -1,8 +1,8 @@
 import { faMinus, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Button } from "react-bootstrap";
-import { useState } from "react";
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
+import './styles.css';
 
 export const ItemCount = ({stock, initial, onAdd}) => {
 
@@ -13,7 +13,7 @@ export const ItemCount = ({stock, initial, onAdd}) => {
     const style = { border: 'none', backgroundColor: 'white', textAlign: 'center'};
     return (
         <>
-            <div style={{ borderColor: 'grey', border: 'solid', borderRadius: '.325rem', borderWidth: '.125rem' }}className='input-group'>
+            <div className='input-group'>
                 <button type="button" style={style}>
                     <FontAwesomeIcon onClick={() => {if(count>1) setCount(count-1)}} icon={faMinus} />
                 </button>
