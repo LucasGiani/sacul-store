@@ -33,6 +33,7 @@ function App() {
         <Route exact path="/" render={() => (<ItemListContainer onAdd={onAddProduct} greeting={GREETING} products={products} setProducts={setProducts}/>)}/>
         <Route exact path="/category/:id" render={() => (<ItemListContainer onAdd={onAddProduct} products={products} setProducts={setProducts}/>)}/>
         <Route path="/item/:id" render={() => (<ItemDetailContainer onAdd={(p) => onAddProduct(p)} products={products}/>)} />
+        <Route path="/cart" render={() => (<h1>Cart</h1>)} />
         <Route path="*" render={() => (<h1>404</h1>)} />
       </Switch>
     </BrowserRouter>

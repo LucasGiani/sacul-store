@@ -38,7 +38,7 @@ export const NavBar = ({cart}) => {
         <Navbar className='nav-bar' bg="light" expand="md">
             <NavbarBrand>
                 <NavLink to={'/'}>
-                    <FontAwesomeIcon className='icon' size='2x' icon={faMusic} title='E-Music'/>
+                    <FontAwesomeIcon color='blue' size='2x' icon={faMusic} title='E-Music'/>
                 </NavLink>
             </NavbarBrand>
             <NavbarToggle aria-controls="basic-navbar-nav" />

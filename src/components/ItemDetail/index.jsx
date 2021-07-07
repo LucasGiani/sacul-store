@@ -1,10 +1,15 @@
-import { Card, Col, Row } from "react-bootstrap";
+import { useState } from "react";
+import { Button, Card, Col, Row } from "react-bootstrap";
 import { ItemCount } from "../ItemCount";
+import { NavLink } from 'react-router-dom';
 import './styles.css';
 
 export const ItemDetail = ({product, onAdd}) => {
 
+    const [onCountSelected, setOnCountSelected] = useState(false);
+
     const comprar = (count) => {
+        setOnCountSelected(count>0);
         product.stock = product.stock - count;
         onAdd(product, count);
     };
@@ -25,7 +30,11 @@ export const ItemDetail = ({product, onAdd}) => {
                             <Card.Text><strong>{`$${product.price}`}</strong></Card.Text>
                             <Row className='item-count'>
                                 <Card.Text>Cantidad disponible: {product.stock}</Card.Text>
-                                <ItemCount stock={product.stock} initial={1} onAdd={comprar}/>
+                                {!onCountSelected ? <ItemCount stock={product.stock} initial={1} onAdd={comprar} /> :
+                                    <Button variant="tertiary">
+                                        <NavLink to={'/cart'}>Terminar mi compra</NavLink>
+                                    </Button>
+                                }
                             </Row>
                         </Card.Body>
                     </Col>
