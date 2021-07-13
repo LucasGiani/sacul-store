@@ -7,9 +7,13 @@ import { NavLink } from 'react-router-dom';
 import { faMusic } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { CATEGORIES } from '../../utils/const';
+import { CartContext } from "../../context/cart-context";
+import { useContext } from 'react';
 import './styles.css';
 
-export const NavBar = ({cart}) => {
+export const NavBar = () => {
+
+    const { cart } = useContext(CartContext);
 
     const getCantProductos = () => {
         let cantidad = 0;
