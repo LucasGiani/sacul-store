@@ -22,7 +22,7 @@ export const ItemDetail = ({product, onAdd}) => {
                 </Col>
                 <Row className='detail'>
                     <Col md={7} style={{ textAlign: "center"}}>
-                        <img className='image' src={product.img} />
+                        <img className='image' src={product.img} alt={product.img}/>
                     </Col>
                     <Col md={5}>
                         <Card.Body>

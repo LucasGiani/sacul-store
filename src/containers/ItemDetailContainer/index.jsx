@@ -21,6 +21,7 @@ export const ItemDetailContainer = () => {
     const changeProduct = (product, count) => {
         let productoComprado = product;
         productoComprado.cantidadComprada = (product.cantidadComprada || 0) + count;
+        productoComprado.subTotal = count * product.price;
         onAddProduct(productoComprado);
     }
 

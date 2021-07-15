@@ -1,0 +1,15 @@
+.cart-item-card {
+    background-color: aliceblue;
+    margin: 2rem;
+}
+
+.cart-item-line{
+    display: inline-flex;
+    text-align: center;
+    justify-content: center;
+}
+
+.remove-button{
+    cursor: pointer;
+    color: orangered;
+}

@@ -1,0 +1,24 @@
+.row-alert{
+    display: flex;
+    padding: 2rem;
+    text-align: center;
+    justify-content: center;
+}
+
+.no-products-alert{
+    width: 80% 
+}
+
+.inline-end {
+    display: flex;
+    justify-content: flex-end;
+    margin-right: 2rem;
+}
+
+.card-total {
+    background-color: aliceblue;
+    text-align: center;
+    justify-content: center;
+    padding: 1rem;
+    margin: 2rem;
+}

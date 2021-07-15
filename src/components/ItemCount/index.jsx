@@ -1,8 +1,6 @@
-import { faMinus, faPlus } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Button } from "react-bootstrap";
 import { useState, useEffect } from "react";
-import './styles.css';
+import { Counter } from "../Counter/counter";
 
 export const ItemCount = ({stock, initial, onAdd}) => {
 
@@ -10,24 +8,14 @@ export const ItemCount = ({stock, initial, onAdd}) => {
 
     const [count, setCount] = useState(initial);
 
-    const style = { border: 'none', backgroundColor: 'white', textAlign: 'center'};
     return (
         <>
-            <div className='input-group'>
-                <button type="button" style={style}>
-                    <FontAwesomeIcon onClick={() => {if(count>1) setCount(count-1)}} icon={faMinus} />
-                </button>
-                <input 
-                    type="text"
-                    style={style}
-                    className="form-control input-number" 
-                    value={count}
-                    readOnly={true}
-                />
-                <button type="button" onClick={() => {if(count<stock) setCount(count+1)}} style={style}>
-                    <FontAwesomeIcon icon={faPlus} />
-                </button>
-            </div>
+            <Counter
+                count={count}
+                stock={stock}
+                onIncrement={(amount) => setCount(amount)}
+                onDecrement={(amount) => setCount(amount)}
+            />
             <Button variant="primary" style={{ marginTop: '1rem'}} disabled={!stock} onClick={() => onAdd(count)}>Agregar al carrito</Button>
         </>
     );

@@ -53,7 +53,7 @@ export const NavBar = () => {
                     )}
                 </Nav>
                 <Form inline>
-                    <CardWidget count={getCantProductos()}/>
+                    {cart.length > 0 && <CardWidget count={getCantProductos()} />}
                 </Form>
             </NavbarCollapse>
         </Navbar>

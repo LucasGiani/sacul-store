@@ -19,7 +19,7 @@ export const CardComponent = ({product, onAdd}) => {
             {!!producto &&
                 <Card className='product-card'>
                     <Link to={`/item/${producto.id}`}>
-                        <img className='card-image' src={producto.img} />
+                        <img className='card-image' alt={producto.img} src={producto.img} />
                     </Link>
                     <Card.Body>
                         <Card.Title>

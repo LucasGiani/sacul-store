@@ -41,6 +41,7 @@ export const ItemListContainer = () => {
 
         let productoComprado = product;
         productoComprado.cantidadComprada = count;
+        productoComprado.subTotal = count * product.price;
         onAddProduct(productoComprado);
     }
 

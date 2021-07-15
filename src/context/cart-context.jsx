@@ -33,6 +33,8 @@ export const CartContextComponent = ({ children }) => {
 
     const isInCart = (producto) => cart.some(element => element.id === producto.id);
 
+    const removeProduct = (producto) => setCart([...cart.filter(element => element.id !== producto.id)]);
+
     const waitForData = async (id) => {
         setLoading(true);
         
@@ -63,19 +65,31 @@ export const CartContextComponent = ({ children }) => {
                     id: data.id,
                     title: data.title,
                     img: data.thumbnail.replace('I.jpg', 'O.jpg'),
-                    price: data.price,
+                    price: data.price.toFixed(2),
                     stock: data.available_quantity,
-                    cantidadComprada: 0
+                    cantidadComprada: 0,
+                    subTotal: 0
             };
         }
         setLoading(false);
         return producto;
     }
 
+    const getTotal = () => cart.map(product => product.subTotal).reduce((subtotalA, subtotalB) => subtotalA + subtotalB, 0).toFixed(2);
+
+    const updateCantidadComprada = (product, amount) => {
+        product.cantidadComprada = amount;
+        product.subTotal = product.price * amount;
+        setCart([...cart.map(element => element.id === product.id ? product : element)]);
+    }
 
     return (
         <CartContext.Provider
-            value={{ cart, setCart, products, setProducts, onAddProduct, greeting: GREETING, waitForData, waitForProduct }}>
+            value={{
+                cart, setCart, products, setProducts, onAddProduct,
+                greeting: GREETING, waitForData, waitForProduct,
+                removeProduct, getTotal, updateCantidadComprada
+            }}>
             
             <Loader isShown={isLoading}>Cargando...</Loader>
             
