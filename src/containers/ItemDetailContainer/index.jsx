@@ -4,18 +4,24 @@ import { ItemDetail } from "../../components/ItemDetail";
 import { CartContext } from "../../context/cart-context";
 
 export const ItemDetailContainer = () => {
-    const { onAddProduct, products, waitForProduct } = useContext(CartContext);
+    const { onAddProduct, waitForProduct } = useContext(CartContext);
     const [product , setProduct] = useState(null);
     const { id } = useParams();
     
     useEffect(() => {
-        if(!id) return window.alert('Id de producto no proporcionado');
-        let producto = products.find(producto => producto.id === id);
+        let mounted = true;
 
-        if (!producto)
-            producto = waitForProduct(id);
-        
-        setProduct(producto);
+        if(!id) return window.alert('Id de producto no proporcionado');
+
+        const getData = async () => {
+            let producto = await waitForProduct(id);
+            if (mounted)
+                setProduct(producto);
+        }
+       
+        getData();
+
+        return () => mounted = false;
     }, [id]);
 
     const changeProduct = (product, count) => {

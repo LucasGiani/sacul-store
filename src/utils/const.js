@@ -13,3 +13,10 @@ export const CATEGORY = {
 export const CATEGORIES = [ CATEGORY.BATERIAS, CATEGORY.GUITARRAS];
 
 export const GREETING = 'Hola, te damos la bienvenida a nuestro e-commerce!';
+
+export const CATEGORIAS = {
+    BATERIA_ACUSTICA: 1,
+    BATERIA_ELECTRONICA: 2,
+    GUITARRA_ELECTRICA: 3,
+    GUITARRA_CRIOLLA: 4
+}

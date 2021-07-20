@@ -14,7 +14,7 @@ const CartItemComponent = ({ product }) => {
         <Card className='cart-item-card'>
             <Card.Body>
                 <Col lg={12} style={{ marginBottom: '1rem' }}>
-                    <Card.Title>{product.title}</Card.Title>
+                    <Card.Title>{product.name}</Card.Title>
                 </Col>
                 <Col lg={12} className='cart-item-line'>
                     <Col lg={3}>

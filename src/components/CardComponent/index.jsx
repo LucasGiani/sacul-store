@@ -23,7 +23,7 @@ export const CardComponent = ({product, onAdd}) => {
                     </Link>
                     <Card.Body>
                         <Card.Title>
-                            <Link className='product-title' to={`/item/${producto.id}`}>{producto.title}</Link>
+                            <Link className='product-title' to={`/item/${producto.id}`}>{producto.name}</Link>
                         </Card.Title>
                         <Card.Text><strong>{`$${producto.price}`}</strong></Card.Text>
                         <Card.Text>Cantidad disponible: {producto.stock}</Card.Text>

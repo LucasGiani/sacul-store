@@ -26,7 +26,7 @@ export const ItemDetail = ({product, onAdd}) => {
                     </Col>
                     <Col md={5}>
                         <Card.Body>
-                            <Card.Title>{product.title}</Card.Title>
+                            <Card.Title>{product.name}</Card.Title>
                             <Card.Text><strong>{`$${product.price}`}</strong></Card.Text>
                             <Row className='item-count'>
                                 <Card.Text>Cantidad disponible: {product.stock}</Card.Text>

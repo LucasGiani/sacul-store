@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { createContext } from "react";
-import { GREETING, SUBCATEGORY } from "../utils/const";
-import { getDataByProductId, getDataByText } from "../utils/get-data";
+import { CATEGORIAS, GREETING } from "../utils/const";
+import { getDataFirebaseByCategory, getDataFirebaseByProductId } from "../utils/get-data";
 import { Loader } from "../components/Loader";
 
 export const CartContext = createContext();
@@ -11,11 +11,16 @@ export const CartContextComponent = ({ children }) => {
     const [isLoading, setLoading] = useState(false);
     const [cart, setCart] = useState([]);
     const [products, setProducts] = useState([]);
+    //estado pensado en el paginado futuro
+    const [cantidadPaginada, setCantidadPaginada] = useState(50);
 
     useEffect(() => {
-        setTimeout(() => {
-            setProducts(waitForData());
-        }, 2000);
+        const getData = async () => {
+            let productos = await waitForData();
+            setProducts(productos);
+        }
+
+        getData();
     }, []);
 
     const onAddProduct = (producto) => {
@@ -37,40 +42,33 @@ export const CartContextComponent = ({ children }) => {
 
     const waitForData = async (id) => {
         setLoading(true);
+
+        let productos = products.filter(producto => producto.category === id);
+
+        if (!productos.length || (!!productos.length && productos.length <= cantidadPaginada))
+            productos = await getDataFirebaseByCategory(id || CATEGORIAS.BATERIA_ACUSTICA);
+
+        if (id)
+            setProducts(products.concat(productos));
         
-        let data = await getDataByText(SUBCATEGORY[parseInt(id || "1")]?.title);
-        let productos = data.map(element => {
-                return {
-                id: element.id,
-                title: element.title,
-                img: element.thumbnail.replace('I.jpg', 'O.jpg'),
-                price: element.price,
-                stock: element.available_quantity,
-                cantidadComprada: 0,
-                subcategory: parseInt(id || "1")
-            }
-        });
-        setProducts(products.concat(productos));
         setLoading(false);
         return productos;
     }
 
     const waitForProduct = async (id) => {
         setLoading(true);
+
         let producto = products.find(producto => producto.id === id);
         if (!producto) {  
-            let data = await getDataByProductId(id);
-            if(!data) return window.alert('El id del producto no es válido');
-            producto = {
-                    id: data.id,
-                    title: data.title,
-                    img: data.thumbnail.replace('I.jpg', 'O.jpg'),
-                    price: data.price.toFixed(2),
-                    stock: data.available_quantity,
-                    cantidadComprada: 0,
-                    subTotal: 0
-            };
+            let data = await getDataFirebaseByProductId(id);
+            if (!data) {
+                setLoading(false);
+                return window.alert('El id del producto no es válido');
+            }
+            producto = data;
+            setProducts([...products, producto]);
         }
+
         setLoading(false);
         return producto;
     }
@@ -88,7 +86,8 @@ export const CartContextComponent = ({ children }) => {
             value={{
                 cart, setCart, products, setProducts, onAddProduct,
                 greeting: GREETING, waitForData, waitForProduct,
-                removeProduct, getTotal, updateCantidadComprada
+                removeProduct, getTotal, updateCantidadComprada,
+                cantidadPaginada
             }}>
             
             <Loader isShown={isLoading}>Cargando...</Loader>
