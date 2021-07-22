@@ -6,9 +6,13 @@ import { faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 import { Counter } from "../Counter/counter";
 import "./styles.css";
 
-const CartItemComponent = ({ product }) => {
+const CartItemComponent = ({ cartItem }) => {
 
-    const { removeProduct, updateCantidadComprada  } = useContext(CartContext);
+    const { removeProduct, updateCantidadComprada } = useContext(CartContext);
+    
+    const product = cartItem.producto;
+    const cantidadComprada = cartItem.cantidadComprada;
+    const subTotal = cartItem.subTotal;
 
     return (
         <Card className='cart-item-card'>
@@ -22,7 +26,7 @@ const CartItemComponent = ({ product }) => {
                     </Col>
                     <Col lg={2}>
                         <Counter
-                            count={product.cantidadComprada}
+                            count={cantidadComprada}
                             stock={product.stock}
                             onIncrement={(amount) => updateCantidadComprada(product, amount)}
                             onDecrement={(amount) => updateCantidadComprada(product, amount)}
@@ -32,7 +36,7 @@ const CartItemComponent = ({ product }) => {
                         <Card.Text><strong>{`Precio: $${product.price}`}</strong></Card.Text>
                     </Col>
                     <Col lg={3}>
-                        <Card.Text><strong>{`Subtotal: $${product.subTotal.toFixed(2)}`}</strong></Card.Text>
+                        <Card.Text><strong>{`Subtotal: $${subTotal.toFixed(2)}`}</strong></Card.Text>
                     </Col>
                     <Col lg={1}>
                         <FontAwesomeIcon className='remove-button' icon={faTrashAlt} size='2x' onClick={() => removeProduct(product)} />
@@ -44,9 +48,8 @@ const CartItemComponent = ({ product }) => {
 }
 
 const validateItemProps = (prevProps, nextProps) => {
-    return prevProps.cantidadComprada === nextProps.cantidadComprada &&
-        prevProps === nextProps &&
-        prevProps.stock === nextProps.stock;
+    return prevProps.cartItem.cantidadComprada === nextProps.cartItem.cantidadComprada &&
+        prevProps.cartItem.subTotal === nextProps.cartItem.subTotal;
 }
 
 export const CartItem = React.memo(CartItemComponent, validateItemProps);

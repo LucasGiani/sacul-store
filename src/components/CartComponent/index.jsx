@@ -1,9 +1,10 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { CartContext } from "../../context/cart-context";
 import { NavLink } from 'react-router-dom';
 import { Alert, Col, Card, Row } from "react-bootstrap";
 import { CartItem } from "../CartItem";
 import "./styles.css";
+import { BuyerForm } from "../BuyerForm";
 
 export const Cart = () => {
 
@@ -13,14 +14,19 @@ export const Cart = () => {
         <>
             {cart.length > 0 ?
                 <>
-                    {cart.map(product =>
-                        <Col lg={12} key={product.id}>
-                            <CartItem product={product} />
+                    {cart.map((item, index) =>
+                        <Col lg={12} key={index}>
+                            <CartItem cartItem={item} />
                         </Col>
                     )}
                     <Col lg={12}>
                         <Card className="card-total">
                             <h3 className="inline-end">{`Total: $${getTotal()}`}</h3>
+                        </Card>
+                    </Col>
+                    <Col lg={12}>
+                        <Card className="card-form-buyer">
+                            <BuyerForm />
                         </Card>
                     </Col>
                 </>

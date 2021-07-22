@@ -20,3 +20,5 @@ export const CATEGORIAS = {
     GUITARRA_ELECTRICA: 3,
     GUITARRA_CRIOLLA: 4
 }
+
+export const HTTP_CODE_SUCCESS = 200;

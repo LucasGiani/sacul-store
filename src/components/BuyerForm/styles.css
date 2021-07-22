@@ -1,0 +1,22 @@
+.inline-start {
+    display: flex;
+    justify-content: flex-start;
+    padding: 1rem;
+}
+
+.form {
+    align-self: center;
+    width: 80%;
+}
+
+.form-input {
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+
+.button {
+    width: 100%;
+    line-height: 1.25;
+    margin-bottom: .5rem;
+    font-weight: 500;
+  }

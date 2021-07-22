@@ -13,26 +13,21 @@ import './styles.css';
 
 export const NavBar = () => {
 
-    const { cart } = useContext(CartContext);
+    const { getCantidadComprada } = useContext(CartContext);
 
-    const getCantProductos = () => {
-        let cantidad = 0;
-        cart.map(producto => cantidad += producto.cantidadComprada );
-
-        return cantidad;
-    }
+    const cantidadComprada = getCantidadComprada();
 
     const DropDown = ({category}) => {
         const {id, title, subcategories} = category;
         const categoryTitle = capitalizeFirstLetter(title);
         return(
-            <NavDropdown key={id} title={categoryTitle} id={id}>
+            <NavDropdown key={id} title={categoryTitle}>
                 {subcategories.map(subcategory => (
-                        <NavDropdown.Item key={subcategory.id}>
-                            <NavLink id={subcategory.id} to={`/category/${subcategory.id}`}>
-                                {capitalizeFirstLetter(subcategory.title)}
-                            </NavLink>
-                        </NavDropdown.Item>
+                    <NavDropdown.Item key={subcategory.id}>
+                        <Nav.Link as={NavLink} id={subcategory.id} to={`/category/${subcategory.id}`}>
+                            {capitalizeFirstLetter(subcategory.title)}
+                        </Nav.Link>
+                    </NavDropdown.Item>
                 ))}
             </NavDropdown>
         );
@@ -53,7 +48,7 @@ export const NavBar = () => {
                     )}
                 </Nav>
                 <Form inline>
-                    {cart.length > 0 && <CardWidget count={getCantProductos()} />}
+                    {!!cantidadComprada && <CardWidget count={cantidadComprada} />}
                 </Form>
             </NavbarCollapse>
         </Navbar>
