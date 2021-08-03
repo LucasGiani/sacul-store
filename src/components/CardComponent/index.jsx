@@ -1,36 +1,31 @@
-import { useState } from "react";
+import { useContext } from "react";
 import { Card } from "react-bootstrap"
 import { ItemCount } from "../ItemCount";
 import { Link } from "react-router-dom";
 import './styles.css'
+import { CartContext } from "../../context/cart-context";
 
-export const CardComponent = ({product, onAdd}) => {
-
-    const [producto, setProduct] = useState(product);
-
-    const comprar = (count) => {
-        producto.stock = producto.stock - count;
-        setProduct({...producto});
-        onAdd(producto, count);
-    };
+export const CardComponent = ({ product }) => {
+    
+    const { onAddProduct } = useContext(CartContext);
 
     return(
         <>
-            {!!producto &&
+            {!!product &&
                 <Card className='product-card'>
-                    <Link to={`/item/${producto.id}`}>
-                        <img className='card-image' alt={producto.img} src={producto.img} />
+                    <Link to={`/item/${product.id}`}>
+                        <img className='card-image' alt={product.img} src={product.img} />
                     </Link>
                     <Card.Body>
                         <Card.Title>
-                            <Link className='product-title' to={`/item/${producto.id}`}>{producto.name}</Link>
+                            <Link className='product-title' to={`/item/${product.id}`}>{product.name}</Link>
                         </Card.Title>
-                        <Card.Text><strong>{`$${producto.price}`}</strong></Card.Text>
-                        <Card.Text>Cantidad disponible: {producto.stock}</Card.Text>
+                        <Card.Text><strong>{`$${product.price}`}</strong></Card.Text>
+                        <Card.Text>Cantidad disponible: {product.stock}</Card.Text>
                         <Card.Text>
-                            <Link to={`/item/${producto.id}`}>Ver detalle</Link>    
+                            <Link to={`/item/${product.id}`}>Ver detalle</Link>    
                         </Card.Text>
-                        <ItemCount stock={producto.stock} initial={1} onAdd={comprar}/>
+                        <ItemCount stock={product.stock} initial={1} onAdd={(count) => onAddProduct(product, count)}/>
                     </Card.Body>
                 </Card>
             }

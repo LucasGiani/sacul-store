@@ -1,10 +1,8 @@
 import { Button } from "react-bootstrap";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Counter } from "../Counter/counter";
 
 export const ItemCount = ({stock, initial, onAdd}) => {
-
-    useEffect(() => setCount(initial), [stock]);
 
     const [count, setCount] = useState(initial);
 
@@ -16,7 +14,7 @@ export const ItemCount = ({stock, initial, onAdd}) => {
                 onIncrement={(amount) => setCount(amount)}
                 onDecrement={(amount) => setCount(amount)}
             />
-            <Button variant="primary" style={{ marginTop: '1rem'}} disabled={!stock} onClick={() => onAdd(count)}>Agregar al carrito</Button>
+            <Button variant="primary" style={{ marginTop: '1rem' }} disabled={!stock} onClick={() => onAdd(count)}>Agregar al carrito</Button>
         </>
     );
 }

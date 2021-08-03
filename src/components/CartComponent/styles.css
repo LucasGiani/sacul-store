@@ -9,10 +9,26 @@
     width: 80% 
 }
 
+.inline {
+    display: flex;
+}
+
+.inline-came-back-link {
+    display: flex;
+    justify-content: flex-start;
+    margin-top: 1rem;
+}
+
 .inline-end {
     display: flex;
     justify-content: flex-end;
-    margin-right: 2rem;
+}
+
+.delete-all-button {
+    margin-top: 1rem;
+    line-height: 1.25;
+    margin-bottom: 1rem;
+    font-weight: 500;
 }
 
 .card-total {

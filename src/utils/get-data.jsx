@@ -1,18 +1,19 @@
 import { getFirestore } from "../firebase/client";
 
 export const getDataFirebaseByCategory = async (category = 1) => {
-    const DB = getFirestore(); // Conexion a la base de datos
+    const DB = getFirestore();
     const COLLECTION = DB.collection("productos").where('category', '==', category);
     const RESPONSE = await COLLECTION.get();
 
-    let data = RESPONSE.docs.map(doc => doc.data()).map(element => {
+    let data = RESPONSE.docs.map(doc => {
+            let elementData = doc.data();
             return {
-                id: element.id,
-                name: element.name,
-                img: element.img.replace('I.jpg', 'O.jpg'),
-                price: element.price,
-                stock: element.stock,
-                category: element.category,
+                id: doc.id,
+                name: elementData.name,
+                img: elementData.img,
+                price: elementData.price,
+                stock: elementData.stock,
+                category: elementData.category,
            }
         });
 
@@ -20,17 +21,19 @@ export const getDataFirebaseByCategory = async (category = 1) => {
 }
 
 export const getDataFirebaseByProductId = async (productId) => {
-    const DB = getFirestore(); // Conexion a la base de datos
-    const COLLECTION = DB.collection("productos").where('id','==',productId);
+    const DB = getFirestore();
+    const COLLECTION = DB.collection("productos").doc(productId);
     const RESPONSE = await COLLECTION.get();
-    let dataFirebase = RESPONSE.docs[0]?.data();
 
-    if (!dataFirebase) return;
+    if (!RESPONSE.exists)
+        throw new Error('Product Not Found');
+    
+    const dataFirebase = RESPONSE.data();
         
-    let data = {
-            id: dataFirebase.id,
+    const data = {
+            id: RESPONSE.id,
             name: dataFirebase.name,
-            img: dataFirebase.img.replace('I.jpg', 'O.jpg'),
+            img: dataFirebase.img,
             price: dataFirebase.price,
             stock: dataFirebase.stock,
             category: dataFirebase.category,

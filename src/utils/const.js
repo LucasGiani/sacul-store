@@ -1,24 +1,26 @@
-export const SUBCATEGORY = {
+export const MENU_SUBCATEGORY = {
     1: { id: 1, title: "baterias acústicas" },
     2: { id: 2, title: "baterias electrónicas" },
     3: { id: 3, title: "guitarras eléctricas" },
     4: { id: 4, title: "guitarras criollas" }
 };
 
-export const CATEGORY = {
-    BATERIAS: { id: 1, title: 'baterias', subcategories: [SUBCATEGORY[1], SUBCATEGORY[2]] },
-    GUITARRAS: { id: 2, title: 'guitarras', subcategories: [SUBCATEGORY[3], SUBCATEGORY[4]] }
+export const MENU_CATEGORY = {
+    BATERIAS: { id: 1, title: 'baterias', subcategories: [MENU_SUBCATEGORY[1], MENU_SUBCATEGORY[2]] },
+    GUITARRAS: { id: 2, title: 'guitarras', subcategories: [MENU_SUBCATEGORY[3], MENU_SUBCATEGORY[4]] }
 };
 
-export const CATEGORIES = [ CATEGORY.BATERIAS, CATEGORY.GUITARRAS];
+export const NAVBAR_CATEGORIES = [ MENU_CATEGORY.BATERIAS, MENU_CATEGORY.GUITARRAS];
 
 export const GREETING = 'Hola, te damos la bienvenida a nuestro e-commerce!';
 
-export const CATEGORIAS = {
+export const PRODUCT_CATEGORY = {
     BATERIA_ACUSTICA: 1,
     BATERIA_ELECTRONICA: 2,
     GUITARRA_ELECTRICA: 3,
     GUITARRA_CRIOLLA: 4
 }
 
-export const HTTP_CODE_SUCCESS = 200;
+export const ORDER_STATE = {
+    GENERADA: 1
+}

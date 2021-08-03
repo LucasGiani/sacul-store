@@ -4,3 +4,9 @@
     border-radius: .325rem;
     border-width: .125rem;
 }
+
+.counter {
+    border: none;
+    background-color: white !important;
+    text-align: center;
+}

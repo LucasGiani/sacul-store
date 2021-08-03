@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { createContext } from "react";
-import { CATEGORIAS, GREETING, HTTP_CODE_SUCCESS } from "../utils/const";
+import { PRODUCT_CATEGORY, GREETING, ORDER_STATE } from "../utils/const";
 import { getDataFirebaseByCategory, getDataFirebaseByProductId } from "../utils/get-data";
 import { Loader } from "../components/Loader";
 import { addOrder } from "../utils/post-data";
@@ -12,8 +12,7 @@ export const CartContextComponent = ({ children }) => {
     const [isLoading, setLoading] = useState(false);
     const [cart, setCart] = useState([]);
     const [products, setProducts] = useState([]);
-    //estado pensado en el paginado futuro
-    const [cantidadPaginada, setCantidadPaginada] = useState(50);
+    const cantidadPaginada = 50;
 
     useEffect(() => {
         setLoading(true);
@@ -27,16 +26,20 @@ export const CartContextComponent = ({ children }) => {
     }, []);
 
     const onAddProduct = (producto, count) => {
-        const newCart = isInCart(producto) ? 
-          cart.map(element => {
-            if(element.producto.id === producto.id){
-              element.cantidadComprada = count + element.cantidadComprada;
-                element.subTotal = element.cantidadComprada * element.producto.price;
+
+        producto.stock -= count;
+
+        const newCart = isInCart(producto) ?
+            cart.map(element => {
+                if (element.producto.id === producto.id) {
+                    element.producto = producto;
+                    element.cantidadComprada = count + element.cantidadComprada;
+                    element.subTotal = element.cantidadComprada * element.producto.price;
+                }
                 return element;
-            }
-            return element;
-          }) : [...cart, { producto: producto, cantidadComprada: count, subTotal: count * producto.price }];
-    
+            }) : [...cart, { producto: producto, cantidadComprada: count, subTotal: count * producto.price }];
+        
+        onChangeProduct(producto);
         setCart(newCart);
     }
 
@@ -52,13 +55,19 @@ export const CartContextComponent = ({ children }) => {
 
     const updateCantidadComprada = (producto, amount) => {
         setCart([...cart.map(element => {
-            if(element.producto.id === producto.id){
+            if (element.producto.id === producto.id) {
+                producto.stock = element.cantidadComprada < amount ?
+                    producto.stock -= 1 : producto.stock += 1;
+                
+                element.producto = producto;
                 element.cantidadComprada = amount;
                 element.subTotal = amount * element.producto.price;
                 return element;
               }
               return element;
         })]);
+        
+        onChangeProduct(producto);
     }
 
     const restoreProductsStock = () => {
@@ -82,11 +91,18 @@ export const CartContextComponent = ({ children }) => {
         setProducts(products.concat(newProducts));
     }
 
+    const deleteAll = () => {
+        restoreProductsStock();
+        cleanCart();
+    };
+
+    const cleanCart = () => setCart([]);
+
     const waitForData = async (id) => {
         let productos = products.filter(producto => producto.category === id);
 
         if (!productos.length || (!!productos.length && productos.length <= cantidadPaginada)) 
-            productos = await getDataFirebaseByCategory(id || CATEGORIAS.BATERIA_ACUSTICA);
+            productos = await getDataFirebaseByCategory(id || PRODUCT_CATEGORY.BATERIA_ACUSTICA);
 
         if (id)
             addProductsWithoutRepeat(productos);
@@ -97,43 +113,43 @@ export const CartContextComponent = ({ children }) => {
     const waitForProduct = async (id) => {
         let producto = products.find(producto => producto.id === id);
         if (!producto) {
-            let data = await getDataFirebaseByProductId(id);
-            if (!data) {
-                return window.alert('El id del producto no es válido');
+            try {
+                let data = await getDataFirebaseByProductId(id);
+                if (!data) throw new Error();
+                producto = data;
+                setProducts([...products, producto]);
             }
-            producto = data;
-            setProducts([...products, producto]);
+            catch (e) {
+                throw new Error(e);
+            }
         }
 
         return producto;
     }
 
     const createOrder = async (name, email, phone) => {
-        const order = { buyer: { name, email, phone }, item: cart, total: getTotal(), fecha_compra: new Date() };
+        const order = {
+            buyer: { name, email, phone },
+            item: cart,
+            total: getTotal(),
+            fecha_compra: new Date(),
+            estado: ORDER_STATE.GENERADA
+        };
 
         try {
-            await addOrder(order);
+            return await addOrder(order);
         }
         catch {
             throw new Error('Error al crear la orden de compra');
         }
-
-        return HTTP_CODE_SUCCESS;
     }
-
-    const deleteAll = () => {
-        restoreProductsStock();
-        setCart([]);
-    };
 
     return (
         <CartContext.Provider
             value={{
-                cart, setCart, products, setProducts,
-                onAddProduct, onChangeProduct,
-                greeting: GREETING, waitForData, waitForProduct,
+                cart, products, onAddProduct, greeting: GREETING, waitForData, waitForProduct,
                 removeProduct, getTotal, getCantidadComprada, updateCantidadComprada,
-                createOrder, deleteAll, cantidadPaginada
+                createOrder, deleteAll, cleanCart, cantidadPaginada
             }}>
             
             <Loader isShown={isLoading}>Cargando...</Loader>
@@ -142,5 +158,4 @@ export const CartContextComponent = ({ children }) => {
 
         </CartContext.Provider>
     )
-
 }

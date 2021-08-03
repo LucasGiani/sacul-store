@@ -6,7 +6,7 @@ import { CardWidget } from '../CartWidget';
 import { NavLink } from 'react-router-dom';
 import { faMusic } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { CATEGORIES } from '../../utils/const';
+import { NAVBAR_CATEGORIES } from '../../utils/const';
 import { CartContext } from "../../context/cart-context";
 import { useContext } from 'react';
 import './styles.css';
@@ -43,7 +43,7 @@ export const NavBar = () => {
             <NavbarToggle aria-controls="basic-navbar-nav" />
             <NavbarCollapse id="basic-navbar-nav">
                 <Nav className="mr-auto">
-                    {CATEGORIES.map(category =>
+                    {NAVBAR_CATEGORIES.map(category =>
                         DropDown({category})
                     )}
                 </Nav>

@@ -1,17 +1,18 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Button, Card, Col, Row } from "react-bootstrap";
 import { ItemCount } from "../ItemCount";
 import { NavLink } from 'react-router-dom';
 import './styles.css';
+import { CartContext } from "../../context/cart-context";
 
-export const ItemDetail = ({product, onAdd}) => {
+export const ItemDetail = ({ product }) => {
 
+    const { onAddProduct } = useContext(CartContext);
     const [onCountSelected, setOnCountSelected] = useState(false);
 
     const comprar = (count) => {
         setOnCountSelected(count>0);
-        product.stock = product.stock - count;
-        onAdd(product, count);
+        onAddProduct(product, count);
     };
 
     return(

@@ -1,0 +1,17 @@
+.error-alert{
+    display: flex;
+    padding: 2rem;
+    text-align: center;
+    justify-content: center;
+}
+
+.no-product-found{
+    width: 80% 
+}
+
+.inline-start {
+    display: flex;
+    justify-content: flex-start;
+    margin-left: 3rem;
+    margin-top: 1rem;
+}
