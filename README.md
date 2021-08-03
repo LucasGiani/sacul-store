@@ -4,30 +4,46 @@
 
 ### Introducción
 
-El proyecto está basado en un E-Commerce que ofrece instrumentos musicales. Cabe destacar, que en esta versión, sólo se ofrecen baterias y guitarras:
+El proyecto está basado en un E-Commerce que ofrece instrumentos musicales. Cabe destacar, que en esta primer versión, solo se ofrecen baterias y guitarras:
 * Categoría de baterías:
-	* Acústicas
-	* Electrónicas
+	* **Acústicas**
+	* **Electrónicas**
 * Categoría de guitarras:
-	* Eléctricas
-	* Criollas
+	* **Eléctricas**
+	* **Criollas**
 
 ### Dependencias extra agregadas por npm
 
-* FontAwesome para el uso de iconos, como el carrito de compras y el brand del e-commerce
-* ReactBootstrap para el uso de estilos
+* **FontAwesome** para el uso de iconos, como el carrito de compras y el brand del e-commerce ([font-awesome-icons-free](https://fontawesome.com/v5.15/icons?d=gallery&p=2&m=free))
+* **ReactBootstrap** para el uso de estilos ([react-bootstrap-components](https://react-bootstrap-v4.netlify.app/components/alerts/))
 	
 ### Decisiones importantes
 
-* Utilización de la Api de mercado libre para la obtención de productos
-* Mover el estado *products* (Listado de productos) al app.jsx
-	* De esta forma, poder manipular el mismo y tenerlo siempre actualizado, es decir, si su cantidad fue reducida debido al agregado de una cantidad del mismo al carrito de compras (Esto se produce con el callBack onAdd desde el detalle de un producto o el listado de productos por categoria al clickear sobre el botón *agregar al carrito*), el producto va a mostrar su cantidad de stock restante.
-	* Al comienzo del ciclo de vida de la aplicación, el listado de productos se encuentra vacío, y a medida que se va accediendo a las distintas categorías, el mismo se va llenando sin acumluar productos repetidos (Esto es gracias a que cada producto corresponde a una categoria). La ventaja de esto es que, la próxima vez que quiero cargar la misma categoria, no se va a estar haciendo un fetch. Lo mismo ocurre si se quiere ir al detalle del producto. Cabe destacar, que esta decisión de ir acumulando productos me pareció viable ya que la cantidad de productos total es acotada (son 200 en total, 50 por cada categoría)
-* Tanto el listado de productos total, como el setProductos, son manipulados por app.js y pasados como props a los componentes ItemListContainer e ItemDetailContainer
-	* ItemListContainer, a su vez, tiene su estado de productosDeCategoria, que según la categoría seleccionada, se filtran del listado de products, y si no son encontrados, se hace el fetch de la categoría correspondiente.
-	* Para manipular las categorías, se me ocurrió que la mejor manera era tener un enum/const que tenga un id que representa a cada una con el title, que sería el text con el cual se ejecuta el fetch a la api de mercado libre.
-	* useEffect de ItemListContainer, no solo se ejecuta al cambiar el id de la url correspondiente a la categoría, sino que también, cuando se actualiza un producto, también se modifica la variable "padre" (products)
-	* Para el Detalle del producto, no encontré una property ofrecida por la api de mercado libre que me brinde una descripción detallada del producto, asique me vi obligado a sólo mostrar el título, sumado al precio, el stock y el itemCount para poder seleccionar la cantidad a comprar del mismo.
+#### > Datos almacenados en firebase
+* Se utilizó la api de Mercado Libre para la carga de productos correspondientes a las categorias antes mencionadas.
+* **Importante:** Dado que la cantidad de productos en la base es de un total de 200 y la api de MeLi no ofrece una descripción para los productos, es por ello que se decidió en el detalle no mostrar una descripción del producto.
+#### > Estado products en CartContext
+* Al comienzo del ciclo de vida de la aplicación, el listado de productos se carga inicialmente por defecto con el listado de baterias acústicas (**category 1**), y a medida que se va accediendo a las distintas categorías, el mismo se va llenando sin acumluar productos repetidos. Esto es gracias al método **addProductsWithoutRepeat** implementado en cart-context.jsx y evitar que haya productos repetidos.
+* *Importante*: Se decidió usar una constante manipulada desde CartContext que hace referencia a la cantidad de productos mínima o por página que deberían consultarse con un valor de 50 (por categoria). Por el momento, no se implementó la obtención de datos paginados. Dicha variable sirve para saber si la cantidad de productos que tiene la categoria es la total existente, o si debe ir a buscar mas productos aún. 
+#### > Estado productosDeCategoria en ItemListContainer
+* Según la categoría seleccionada, se filtran los productos del listado de products, y si no son encontrados, se hace el fetch de la categoría correspondiente y el estado se llena con los productos correspondientes.
+* Para manipular las categorías, se creó un enum/const que tenga un id que representa a cada categoría con el title, que sería el que se muestra en el combo de categorías del NavBar, y el id que se corresponde al entero que representa a cada categoría respectivamente.
+#### > Funcionalidades en Cart
+* En principio se visualizan los productos agregados al carrito con la posibilidad de seguir incrementando o decrementando la cantidad a comprar, respetando el Stock disponible.
+* Una vez cargado el formulario y realizada la orden con éxito, cada **CartItem** se convierte de sólo lectura, es decir, que la cantidad ya no se puede modificar, y de esta forma, se le da robustez al componente siendo utilizado como detalle de la compra realizada.
+* Funcionalidad de **vaciar carrito**, sólo disponible si la compra no fue realizada aún.
+* Si la compra ya fue realizada:
+	* Se muestra el **número de orden** correspondiente al id de la orden generada en firebase.
+	* Si se clickea sobre el **botón volver**, se vacía el carrito quedando el stock de productos modificados *(sólo en el estado **products** de CartContext)*, dichas modificaciones de stock no se persisten ya que no era un requerimiento obligatorio. Es por ello que si se recarga la aplicación nuevamente, se pierden dichas modificaciones.
+#### > Estado de la orden
+* Sólo consideré el estado **GENERADA** (Solicitado). Sin embargo, podrían agregarse mas estados como **CANCELADA** suponiendo una funcionalidad adicional como *cancelar compra*
+#### > Error multiple <a> al abrir combo de categorias del NavBar
+* Si bien el error sigue ocurriendo sólo una vez al abrir por primera vez el combo de alguna de las categorias del NavBar, se decidió omitir su solución ya que las alternativas eran:
+	* **Importar una librería externa:** Descartado, ya que me parecia innecesario y complejizarlo.
+	* **Varias formas de evitar utilizando sólo el NavLink u eliminando algún tag html:** Descartado, ya que visualmente se veia bastante mal.
+	* **DECISIÓN TOMADA:** Dejar que el error sigá logueandose en la consola, y así permitir una correcta visualización de las categorias en pantalla.
+#### > Warnings React Hook useEffect has missing dependencies
+* Son 3 warnings que no se consideraron importantes, es por ello que los mismos aparecen en la carga inicial de la aplicación
 
 ## Getting Started with Create React App
 
